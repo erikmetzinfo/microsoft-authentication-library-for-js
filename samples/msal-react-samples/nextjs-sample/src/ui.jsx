@@ -1,6 +1,10 @@
-import React, {useState} from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+    useIsAuthenticated,
+    useMsal,
+    AuthenticatedTemplate,
+} from "@azure/msal-react";
 import { InteractionStatus } from "@azure/msal-browser";
 import { loginRequest } from "../src/authConfig";
 import AppBar from "@material-ui/core/AppBar";
@@ -8,25 +12,25 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import IconButton from "@material-ui/core/IconButton";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+        marginRight: theme.spacing(2),
     },
     title: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
 }));
 
-const SignInButton = () => {
+const SignInButtonOld = () => {
     const { instance } = useMsal();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -40,7 +44,7 @@ const SignInButton = () => {
         } else if (loginType === "redirect") {
             instance.loginRedirect(loginRequest);
         }
-    }
+    };
 
     return (
         <div>
@@ -54,25 +58,32 @@ const SignInButton = () => {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                 }}
                 open={open}
                 onClose={() => setAnchorEl(null)}
             >
-                <MenuItem onClick={() => handleLogin("popup")} key="loginPopup">Sign in using Popup</MenuItem>
-                <MenuItem onClick={() => handleLogin("redirect")} key="loginRedirect">Sign in using Redirect</MenuItem>
+                <MenuItem onClick={() => handleLogin("popup")} key="loginPopup">
+                    Sign in using Popup
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleLogin("redirect")}
+                    key="loginRedirect"
+                >
+                    Sign in using Redirect
+                </MenuItem>
             </Menu>
         </div>
-    )
+    );
 };
 
-const SignOutButton = () => {
+const SignOutButtonOld = () => {
     const { instance } = useMsal();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -86,7 +97,7 @@ const SignOutButton = () => {
         } else if (logoutType === "redirect") {
             instance.logoutRedirect();
         }
-    }
+    };
 
     return (
         <div>
@@ -100,22 +111,58 @@ const SignOutButton = () => {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                 }}
                 open={open}
                 onClose={() => setAnchorEl(null)}
             >
-                <MenuItem onClick={() => handleLogout("redirect")}>Logout using Redirect</MenuItem>
-                <MenuItem onClick={() => handleLogout("popup")}>Logout using Popup</MenuItem>
+                <MenuItem onClick={() => handleLogout("redirect")}>
+                    Logout using Redirect
+                </MenuItem>
+                <MenuItem onClick={() => handleLogout("popup")}>
+                    Logout using Popup
+                </MenuItem>
             </Menu>
         </div>
-    )
+    );
+};
+const SignInButton = () => {
+    const { instance } = useMsal();
+
+    const handleLogin = () => {
+        instance.loginRedirect(loginRequest);
+    };
+
+    return (
+        <div>
+            <Button onClick={() => handleLogin("redirect")} color="inherit">
+                Login
+            </Button>
+        </div>
+    );
+};
+
+const SignOutButton = () => {
+    const { instance } = useMsal();
+
+    const handleLogout = () => {
+        instance.logoutRedirect();
+    };
+
+    return (
+        <div>
+            <Button onClick={() => handleLogout("redirect")} color="inherit">
+                Logout
+                <AccountCircle />
+            </Button>
+        </div>
+    );
 };
 
 const SignInSignOutButton = () => {
@@ -124,13 +171,16 @@ const SignInSignOutButton = () => {
 
     if (isAuthenticated) {
         return <SignOutButton />;
-    } else if (inProgress !== InteractionStatus.Startup && inProgress !== InteractionStatus.HandleRedirect) {
+    } else if (
+        inProgress !== InteractionStatus.Startup &&
+        inProgress !== InteractionStatus.HandleRedirect
+    ) {
         // inProgress check prevents sign-in button from being displayed briefly after returning from a redirect sign-in. Processing the server response takes a render cycle or two
         return <SignInButton />;
     } else {
         return null;
     }
-}
+};
 
 const NavBar = () => {
     const classes = useStyles();
@@ -138,13 +188,23 @@ const NavBar = () => {
     return (
         <div className={classes.root}>
             <AppBar position="static">
-            <Toolbar>
-                <Typography className={classes.title}>
-                    <Link href="/" color="inherit" variant="h6">MS Identity Platform</Link>
-                </Typography>
-                <WelcomeName />
-                <SignInSignOutButton />
-            </Toolbar>
+                <Toolbar>
+                    <Typography className={classes.title}>
+                        <Link href="/" color="inherit" variant="h6">
+                            Home
+                        </Link>
+                        <AuthenticatedTemplate>
+                            <Link href="/upload" color="inherit" variant="h6">
+                                Upload
+                            </Link>
+                            <Link href="/profile" color="inherit" variant="h6">
+                                Profile
+                            </Link>
+                        </AuthenticatedTemplate>
+                    </Typography>
+                    <WelcomeName />
+                    <SignInSignOutButton />
+                </Toolbar>
             </AppBar>
         </div>
     );
@@ -167,18 +227,21 @@ const WelcomeName = () => {
     } else {
         return null;
     }
-}
+};
 
 export const PageLayout = (props) => {
     return (
         <>
             <NavBar />
             <Typography variant="h5">
-                <center>Welcome to the Microsoft Authentication Library For React - Next.js Quickstart</center>
+                <center>
+                    Welcome to the Microsoft Authentication Library For React -
+                    Next.js Quickstart
+                </center>
             </Typography>
-            <br/>
-            <br/>
+            <br />
+            <br />
             {props.children}
         </>
     );
-  };
+};
