@@ -11,7 +11,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 
 export const ProfileData = ({ graphData }) => {
-    console.log("graphData", graphData);
+    // console.log("graphData", graphData);
     return (
         <List className="profileData">
             <NameListItem name={graphData.displayName} />

@@ -67,6 +67,8 @@ export default function MyApp({ Component, pageProps }) {
     );
 }
 
+export const cookieLastRobotSystem = "lastRobotSystem";
+
 MyApp.propTypes = {
     Component: PropTypes.elementType.isRequired,
     pageProps: PropTypes.object.isRequired,
