@@ -1,5 +1,7 @@
 import { MongoClient } from "mongodb";
 
+// TODO: https://www.npmjs.com/package/@azure/identity
+
 const uri = process.env.NEXT_PUBLIC_MONGODB_URI;
 const options = {};
 

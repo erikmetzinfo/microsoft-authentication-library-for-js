@@ -4,6 +4,7 @@ import {
     useIsAuthenticated,
     useMsal,
     AuthenticatedTemplate,
+    UnauthenticatedTemplate,
 } from "@azure/msal-react";
 import { InteractionStatus } from "@azure/msal-browser";
 import { loginRequest } from "../src/authConfig";
@@ -190,10 +191,25 @@ const NavBar = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography className={classes.title}>
-                        <Link href="/" color="inherit" variant="h6">
-                            Home
-                        </Link>
+                        <UnauthenticatedTemplate>
+                            <Link href="/" color="inherit" variant="h6">
+                                Home
+                            </Link>
+                        </UnauthenticatedTemplate>
                         <AuthenticatedTemplate>
+                            <Link href="/" color="inherit" variant="h6">
+                                Upload
+                            </Link>
+                            <Link
+                                href="/calculate"
+                                color="inherit"
+                                variant="h6"
+                            >
+                                Calculate
+                            </Link>
+                            <Link href="/operate" color="inherit" variant="h6">
+                                Operate
+                            </Link>
                             <Link href="/profile" color="inherit" variant="h6">
                                 Profile
                             </Link>
