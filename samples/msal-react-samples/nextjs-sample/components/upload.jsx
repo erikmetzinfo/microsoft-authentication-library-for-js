@@ -14,7 +14,6 @@ import cookieCutter from "cookie-cutter";
 import { DropzoneArea } from "material-ui-dropzone";
 import { RobotSystemSelector } from "./robotSystemSelector";
 import { cookieLastRobotSystem } from "../pages/_app";
-import { uploadToCadBlob } from "../src/blob";
 import Uploader from "./uploader";
 // import FormData from "form-data";
 
@@ -23,20 +22,24 @@ const FileSubmit = (robotSystem) => {
     const [showUploader, setShowUploader] = useState(false);
 
     function handleSelectedFiles(filesSelected) {
-        if (filesSelected.length > 0) {
-            console.log("files", filesSelected);
-            console.log("files[0]", filesSelected[0]);
-            console.log("files[0].name", filesSelected[0].name);
-            console.log("files.target", filesSelected.target);
-            setFiles(filesSelected);
-        }
+        console.log("filesSelected", filesSelected);
+        // if (filesSelected.length > 0) {
+        // console.log("files", filesSelected);
+        // console.log("files[0]", filesSelected[0]);
+        // console.log("files[0].name", filesSelected[0].name);
+        // console.log("files.target", filesSelected.target);
+        setFiles(filesSelected);
+        // }
     }
 
     function handleSubmitFiles() {
-        console.log("upload files", files);
+        // console.log("upload files", files);
         // setShowUploader(true);
         let form = new FormData();
         files.forEach((file) => {
+            // console.log("file", file);
+            // console.log("mimetype", file.type);
+            // var blob = new Blob([file], { type: file.type });
             form.append(file.name, file);
         });
         // form.append("foo", firstFilename"bar");
@@ -105,9 +108,11 @@ const FileSubmit = (robotSystem) => {
                 // maxFileSize={5000000}
                 // onClose={this.handleClose.bind(this)}
             />
-            <Button variant="contained" onClick={handleSubmitFiles}>
-                Upload
-            </Button>
+            {files.length > 0 ? (
+                <Button variant="contained" onClick={handleSubmitFiles}>
+                    Upload
+                </Button>
+            ) : null}
         </>
     );
 };
