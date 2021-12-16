@@ -38,12 +38,12 @@ const FileSubmit = (robotSystem) => {
                 setUploadSuccess(true);
                 setUploadFailure(false);
                 const timer = setTimeout(() => {
-                    console.log("pushing", apiResponse.data.jobs[0].dbId);
+                    // console.log("pushing", apiResponse.data.jobs[0].dbId);
                     router.push(
                         `/calculate?job=${apiResponse.data.jobs[0].dbId}`
                     );
                 }, 3000);
-                console.log("got response");
+                // console.log("got response");
             } else {
                 setUploadSuccess(false);
                 setUploadFailure(true);
@@ -53,7 +53,7 @@ const FileSubmit = (robotSystem) => {
 
     function handleSelectedFiles(filesSelected) {
         if (filesSelected.length > 0) {
-            console.log("filesSelected", filesSelected);
+            // console.log("filesSelected", filesSelected);
             // console.log("files", filesSelected);
             // console.log("files[0]", filesSelected[0]);
             // console.log("files[0].name", filesSelected[0].name);
