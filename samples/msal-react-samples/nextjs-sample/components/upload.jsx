@@ -1,3 +1,4 @@
+import axios from "axios";
 import { MsalAuthenticationTemplate, useMsal } from "@azure/msal-react";
 import {
     InteractionStatus,
@@ -11,31 +12,95 @@ import { Button, Typography } from "@material-ui/core";
 import cookieCutter from "cookie-cutter";
 
 import { DropzoneArea } from "material-ui-dropzone";
-import { RobotSystemSelector } from "../components/robotSystemSelector";
-import { cookieLastRobotSystem } from "./_app";
+import { RobotSystemSelector } from "./robotSystemSelector";
+import { cookieLastRobotSystem } from "../pages/_app";
+import { uploadToCadBlob } from "../src/blob";
+import Uploader from "./uploader";
+// import FormData from "form-data";
 
 const FileSubmit = (robotSystem) => {
     const [files, setFiles] = useState([]);
+    const [showUploader, setShowUploader] = useState(false);
 
     function handleSelectedFiles(filesSelected) {
-        // console.log("files", filesSelected);
-        if (filesSelected.length > 0) setFiles(filesSelected);
+        if (filesSelected.length > 0) {
+            console.log("files", filesSelected);
+            console.log("files[0]", filesSelected[0]);
+            console.log("files[0].name", filesSelected[0].name);
+            console.log("files.target", filesSelected.target);
+            setFiles(filesSelected);
+        }
     }
 
     function handleSubmitFiles() {
         console.log("upload files", files);
+        // setShowUploader(true);
+        let form = new FormData();
+        files.forEach((file) => {
+            form.append(file.name, file);
+        });
+        // form.append("foo", firstFilename"bar");
+        // form.append("", files[0].name);
+        for (var pair of form.entries()) {
+            console.log(pair[0] + ", " + pair[1]);
+        }
+
+        const options = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            // onUploadProgress: (progressEvent) => {
+            //     const { loaded, total } = progressEvent;
+            //     let percent = Math.floor((loaded * 100) / total);
+            //     console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+            // },
+        };
+        axios
+            .post(
+                `http://localhost:3000/api/blob?robotSystem=${robotSystem.props}`,
+                form,
+                options
+                // data,
+                // {
+                //     headers: {
+                //         accept: "application/json",
+                //         "Accept-Language": "en-US,en;q=0.8",
+                //         "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+                //     },
+                // }
+            )
+            .then((response) => {
+                console.log(response);
+            });
     }
 
-    console.log("robotFiles", files);
+    // console.log("robotFiles", files);
     if (!robotSystem) return null;
 
+    if (showUploader && files.length > 0) {
+        return <Uploader files={files} />;
+    }
     return (
         <>
             <DropzoneArea
                 onChange={handleSelectedFiles}
                 // open={this.state.open}
                 // onSave={handleSelectedFiles}
-                acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
+                acceptedFiles={[
+                    "image/jpeg",
+                    "image/png",
+                    "image/bmp",
+                    ".ehx",
+                    ".dwg",
+                    ".dwf",
+                    ".dxf",
+                    ".stl",
+                    ".iges",
+                    ".igs",
+                    ".st",
+                    ".stp",
+                    ".step",
+                ]}
                 showPreviews={false}
                 // maxFileSize={5000000}
                 // onClose={this.handleClose.bind(this)}

@@ -194,9 +194,6 @@ const NavBar = () => {
                             Home
                         </Link>
                         <AuthenticatedTemplate>
-                            <Link href="/upload" color="inherit" variant="h6">
-                                Upload
-                            </Link>
                             <Link href="/profile" color="inherit" variant="h6">
                                 Profile
                             </Link>

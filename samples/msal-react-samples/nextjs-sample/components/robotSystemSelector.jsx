@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import useSwr from "swr";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
 const nameInData = (name, data) => {
     let result = false;
     // console.log("name", name);
@@ -22,6 +20,7 @@ export const RobotSystemSelector = ({
     handleChangeRobotSystem,
     lastRobotSystem,
 }) => {
+    const fetcher = (url) => fetch(url).then((res) => res.json());
     const [firstRun, setFirstRun] = useState(true);
     const [robotSystem, setRobotSystem] = useState();
     const { data, error } = useSwr(
